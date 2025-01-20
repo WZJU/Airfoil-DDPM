@@ -6,7 +6,7 @@ This repository holds the code for our study of 'A Diffusion Model Based Multipo
 
 We will upload our pre-trained model as soon as possible.
 
-Had you got any problem, please contact me at wednzhe@zju.edu.cn
+
 
 ## How to train
 
