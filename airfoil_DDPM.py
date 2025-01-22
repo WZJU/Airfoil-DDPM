@@ -217,7 +217,7 @@ class airfoil_diffusion(nn.Module):
         self.beta=torch.linspace(0.0001, 0.02, steps=1000)
         self.alpha=1-self.beta
         self.alphabar=cal_alpha_bar(self.alpha, 1000)
-        # 如果模型在 CUDA 上，将张量也移动到 CUDA
+        
         if on_cuda:
             self.beta = self.beta.cuda()
             self.alpha = self.alpha.cuda()
@@ -252,7 +252,7 @@ class airfoil_diffusion(nn.Module):
                 noise_pred= hidden_without_context + CFG*( hidden_with_context-hidden_without_context)
                 add_noise=torch.normal(mean=mean, std=std, size=(20,)).reshape(1,-1,20).cuda()
                 x=1/sqrt(self.alpha[t])*(x-(1-self.alpha[t])*noise_pred/sqrt(1-self.alphabar[t]))+self.beta[t]*(1-self.alphabar[t-1])/(1-self.alphabar[t])*add_noise
-                #with open('D:/generate_2/airfoil_diffusion/generate.csv', 'a', newline='') as csvfile:
+                #with open('.../generate.csv', 'a', newline='') as csvfile:
                     #writer = csv.writer(csvfile)
                     #writer.writerow([t, x])
                     #print(f't={t}')
@@ -263,7 +263,7 @@ class airfoil_diffusion(nn.Module):
                 add_noise=torch.normal(mean=mean, std=std, size=(20,)).reshape(1,-1,20).cuda()
                 x=1/sqrt(self.alpha[t])*(x-(1-self.alpha[t])*noise_pred/sqrt(1-self.alphabar[t]))+self.beta[t]*(1-self.alphabar[t-1])/(1-self.alphabar[t])*add_noise
                 #x=(x-(1-self.alpha[t])*noise_pred/sqrt(1-self.alphabar[t]))+self.beta[t]*(1-self.alphabar[t-1])/(1-self.alphabar[t])*add_noise
-                #with open('D:/generate_2/airfoil_diffusion/generate.csv', 'a', newline='') as csvfile:
+                #with open('.../generate.csv', 'a', newline='') as csvfile:
                     #writer = csv.writer(csvfile)
                     #x_list = x.cpu().tolist()
                     #sqrtalpha=1/sqrt(self.alpha[t])
@@ -294,7 +294,6 @@ def weighted_average(tensor):
     for i in range(n):
         distances = torch.tensor([torch.sum((tensor[i] - tensor[j])**2) for j in range(n)])
         weights[i] = torch.exp(-distances[i])
-    # 归一化权重
     weights = weights / torch.sum(weights)
     weights=weights.cuda()
     output=torch.sum(tensor * weights.view(n, 1, 1), dim=0)
@@ -306,7 +305,6 @@ class airfoil_diffusion_multitask(nn.Module):
     def __init__(self, model):
         super().__init__()
         #self.model=Unet(input_dim, query_size,context_size, down_sampling_dim, dropout = 0.)
-        # 模型加载
         #checkpoint = torch.load(model_filename, map_location=torch.device('cuda'),weights_only=True)   ### 加载神经网络模型
         #self.model.load_state_dict(checkpoint['models'])
         self.model=model
@@ -315,7 +313,6 @@ class airfoil_diffusion_multitask(nn.Module):
         self.beta=torch.linspace(0.0001, 0.02, steps=1000)
         self.alpha=1-self.beta
         self.alphabar=cal_alpha_bar(self.alpha, 1000)
-        # 如果模型在 CUDA 上，将张量也移动到 CUDA
         if on_cuda:
             self.beta = self.beta.cuda()
             self.alpha = self.alpha.cuda()
