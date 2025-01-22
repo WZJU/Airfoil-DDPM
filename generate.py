@@ -91,7 +91,7 @@ def dat_file_gen(X,Y_up,Y_down, output_file_name):
             fileID.write(f'	     {row}\n')
 
 df_model=Unet(1, 20,context_size_1=3,context_size_2=3, down_sampling_dim=2, dropout = 0.).cuda()
-checkpoint = torch.load('...pth', map_location=torch.device('cuda'),weights_only=True)   ### 加载神经网络模型
+checkpoint = torch.load('...pth', map_location=torch.device('cuda'),weights_only=True)   
 df_model = partial_load_state_dict(df_model, checkpoint)
 
 #af=airfoil_diffusion(df_model)
@@ -140,7 +140,6 @@ R,t,t_co=geolabel[0][0],geolabel[0][1],geolabel[0][2]
 print(f'Target_R:{context_1[0][0]:.4f},   Target_thickness:{context_1[0][1]:.3f},   Target_thickness_coordinate:{context_1[0][2]:.3f}')
 print(f'Generate_R:{R:.4f}, Generate_thickness:{t:.3f}, Generate_thickness_coordinate:{t_co:.3f}')
 
-###计算气动特性
 n = 75
 num = np.linspace(-1, 1, n)
 X_cal = 0.5 - 0.5 * np.sin(num / 2 * np.pi)
