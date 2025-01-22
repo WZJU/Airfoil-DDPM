@@ -1,4 +1,3 @@
-###本代码用于输入9阶CST参数，输出其坐标点、前缘半径、最大厚度、最大厚度位置、上表面最高点半径
 import math
 import sympy as sp
 import scipy.special
@@ -9,9 +8,7 @@ from scipy.spatial.distance import directed_hausdorff
 import subprocess
 from scipy.spatial import distance_matrix
 
-# 定义符号变量
 x = sp.Symbol('x')
-# 定义函数
 def cst_model_up(c):
     return x**0.5 * (1 - x)**1 * sum(c[i] * scipy.special.comb(9, i) * x**i * (1 - x)**(9 - i) for i in range(10))
 
@@ -28,9 +25,6 @@ def R(c,x):
     return R
 
 def geo_label_cal(CST):
-    #输入的c是一个batch的数据，size是[n,20]
-    #首先是计算其前缘半径，这里可以写死x，把c作为变量
-    #还是只能用循环的形式
     geo_label = []
     for i in range(CST.shape[0]):
         local_CST=CST[i]
@@ -96,7 +90,7 @@ def run_xfoil_for_angles(airfoil_filename, aoa_start,aoa_end,aoa_step):
         if status!= 0:
             return None
     except Exception as e:
-        print(f'XFOIL 执行出现错误：{e}')
+        print(f'XFOIL error：{e}')
         return None
     
 def dat_file_gen(X,Y_up,Y_down, output_file_name):
@@ -138,7 +132,6 @@ def read_polar_files(file_path):
     return results
 
 def Polar_cal(CST):
-    ###计算气动特性
     n = 75
     num = np.linspace(-1, 1, n)
     X_cal = 0.5 - 0.5 * np.sin(num / 2 * np.pi)
@@ -150,8 +143,8 @@ def Polar_cal(CST):
     return results
 
 def distance_cal(Target,Polar):
-    d1, d2, pairs = directed_hausdorff(Target, Polar)#第一个值是第一个点集到第二个点集的单向豪斯多夫距离；第二个值是第二个点集到第一个点集的单向豪斯多夫距离；第三个值是两个点集中对应点对的索引。
-    return d1#根据需求，返回第一个值
+    d1, d2, pairs = directed_hausdorff(Target, Polar)
+    return d1
 
 def average_nearest_neighbor_distance(Target, Polar):
     if not np.any(Polar):
