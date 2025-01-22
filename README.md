@@ -2,7 +2,7 @@
 
 Thank you for your interest in this work.
 
-This repository holds the code for our study of 'A Diffusion Model Based Multipoint Airfoil Inverse Design Method', which is submitting.
+This repository holds the code for our study, which is submitting.
 
 We will upload our pre-trained model as soon as possible.
 
